@@ -70,11 +70,25 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
 
       const orderId: string = data.order_id;
 
+      // Helper: cek apakah transaksi benar-benar sudah dibayar
+      const isPaid = (result: unknown): boolean => {
+        const r = result as Record<string, string> | null;
+        const status = r?.transaction_status;
+        return status === "capture" || status === "settlement";
+      };
+
       window.snap?.pay(data.token, {
-        onSuccess: async () => {
-          await saveSheet(orderId, "PAID");
-          toast.success("Pembayaran berhasil!");
-          onSuccess(orderId, "PAID");
+        onSuccess: async (result: unknown) => {
+          if (isPaid(result)) {
+            await saveSheet(orderId, "PAID");
+            toast.success("Pembayaran berhasil!");
+            onSuccess(orderId, "PAID");
+          } else {
+            // Midtrans memanggil onSuccess tapi belum benar-benar dibayar
+            await saveSheet(orderId, "PENDING");
+            toast("Pembayaran menunggu konfirmasi. Silakan selesaikan pembayaran.");
+            setLoading(false);
+          }
         },
         onPending: async () => {
           await saveSheet(orderId, "PENDING");
