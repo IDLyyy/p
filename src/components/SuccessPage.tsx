@@ -23,7 +23,7 @@ const SuccessPage = () => {
   return (
     <section className="min-h-screen flex items-center justify-center py-16">
       <div className="container max-w-lg text-center animate-scale-in">
-        <div className="bg-card rounded-2xl shadow-elevated p-8 md:p-12 space-y-6">
+        <div className="liquid-glass-card rounded-2xl shadow-elevated p-8 md:p-12 space-y-6">
           <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
             <CheckCircle2 className="h-10 w-10 text-primary" />
           </div>

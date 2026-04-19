@@ -134,7 +134,7 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
   return (
     <section className="py-16 md:py-24">
       <div className="container max-w-2xl">
-        <div className="bg-card rounded-2xl shadow-elevated p-6 md:p-10 animate-scale-in">
+        <div className="liquid-glass-card rounded-2xl shadow-elevated p-6 md:p-10 animate-scale-in">
           <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-2">
             Pembayaran
           </h2>
