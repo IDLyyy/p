@@ -1,6 +1,8 @@
 import { CalendarDays, Clock, User, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WEBINAR_CONFIG } from "@/config/webinar";
+import logoM from "@/assets/logo-m.jpg";
+import logoIsyKarima from "@/assets/logo-isy-karima.jpg";
 
 interface HeroSectionProps {
   onRegisterClick: () => void;
@@ -32,6 +34,16 @@ const HeroSection = ({ onRegisterClick }: HeroSectionProps) => {
 
       <div className="container py-16 md:py-24 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-8 animate-fade-in-up">
+          {/* Logos */}
+          <div className="flex items-center justify-center gap-4 md:gap-6">
+            <div className="liquid-glass-dark rounded-2xl p-1.5 md:p-2">
+              <img src={logoM} alt="Logo M" className="h-14 w-14 md:h-20 md:w-20 rounded-xl object-cover" />
+            </div>
+            <div className="liquid-glass-dark rounded-2xl p-1.5 md:p-2">
+              <img src={logoIsyKarima} alt="ISY Karima" className="h-14 w-14 md:h-20 md:w-20 rounded-xl object-cover" />
+            </div>
+          </div>
+
           {/* Badge */}
           <div className="inline-flex items-center gap-2 rounded-full liquid-glass-dark px-4 py-1.5 text-sm font-medium text-blue-300">
             <span className="relative flex h-2 w-2">
