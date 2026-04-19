@@ -78,8 +78,8 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
         },
         onPending: async () => {
           await saveSheet(orderId, "PENDING");
-          toast("Pembayaran menunggu konfirmasi");
-          onSuccess(orderId, "PENDING");
+          toast("Pembayaran menunggu konfirmasi. Silakan selesaikan pembayaran.");
+          setLoading(false);
         },
         onError: () => {
           toast.error("Pembayaran gagal");

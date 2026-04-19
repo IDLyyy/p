@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Search, Trash2, Users, CheckCircle2, Clock, XCircle, Lock, Download } from "lucide-react";
+import { ArrowLeft, Search, Trash2, Users, CheckCircle2, Clock, XCircle, Lock, Download, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { WEBINAR_CONFIG } from "@/config/webinar";
+import { toast } from "sonner";
 
 const statusConfig = {
   pending: { label: "Menunggu", icon: Clock, variant: "secondary" as const },
@@ -24,8 +25,14 @@ const AdminPage = () => {
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [loading, setLoading] = useState(false);
 
-  const refresh = () => setParticipants(getParticipants());
+  const refresh = async () => {
+    setLoading(true);
+    const data = await getParticipants();
+    setParticipants(data);
+    setLoading(false);
+  };
 
   useEffect(() => { if (isAuthenticated) refresh(); }, [isAuthenticated]);
 
@@ -89,14 +96,16 @@ const AdminPage = () => {
     return matchSearch && matchStatus;
   });
 
-  const handleStatusChange = (id: string, status: Participant["status"]) => {
-    updateParticipantStatus(id, status);
+  const handleStatusChange = async (id: string, status: Participant["status"]) => {
+    await updateParticipantStatus(id, status);
+    toast.success("Status berhasil diubah");
     refresh();
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Yakin ingin menghapus peserta ini?")) {
-      deleteParticipant(id);
+      await deleteParticipant(id);
+      toast.success("Peserta berhasil dihapus");
       refresh();
     }
   };
@@ -109,18 +118,20 @@ const AdminPage = () => {
   };
 
   const exportCSV = () => {
-    const headers = ["Nama", "Email", "WhatsApp", "Profesi", "Metode Pembayaran", "Bukti Bayar", "Tanggal Daftar", "Status"];
+    const headers = ["Nama", "Email", "WhatsApp", "Profesi", "Latar Belakang", "Order ID", "Status Bayar", "Jumlah", "Tanggal Daftar", "Status"];
     const rows = participants.map((p) => [
       p.registrationData.fullName,
       p.registrationData.email,
       p.registrationData.phone,
       p.registrationData.profession,
-      p.paymentMethod,
+      p.registrationData.background,
       p.proofFileName,
+      p.paymentStatus || "",
+      p.amount || "",
       new Date(p.registeredAt).toLocaleString("id-ID"),
       statusConfig[p.status].label,
     ]);
-    const csv = [headers, ...rows].map((r) => r.map((c) => `"${(c || "").replace(/"/g, '""')}"`).join(",")).join("\n");
+    const csv = [headers, ...rows].map((r) => r.map((c) => `"${(String(c || "")).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -128,6 +139,7 @@ const AdminPage = () => {
     a.download = `peserta-webinar-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+    toast.success("File CSV berhasil diunduh");
   };
 
   return (
@@ -145,6 +157,10 @@ const AdminPage = () => {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={refresh} disabled={loading}>
+              <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
             <Button variant="outline" size="sm" onClick={exportCSV} disabled={participants.length === 0}>
               <Download className="h-4 w-4 mr-1" />
               Export CSV
@@ -198,7 +214,12 @@ const AdminPage = () => {
         </div>
 
         {/* Table */}
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="bg-card rounded-xl shadow-card p-12 text-center">
+            <RefreshCw className="h-8 w-8 text-muted-foreground mx-auto mb-3 animate-spin" />
+            <p className="text-muted-foreground">Memuat data peserta...</p>
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="bg-card rounded-xl shadow-card p-12 text-center">
             <Users className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">
@@ -215,7 +236,7 @@ const AdminPage = () => {
                     <TableHead className="hidden md:table-cell">Email</TableHead>
                     <TableHead className="hidden sm:table-cell">WhatsApp</TableHead>
                     <TableHead className="hidden lg:table-cell">Profesi</TableHead>
-                    <TableHead className="hidden lg:table-cell">Pembayaran</TableHead>
+                    <TableHead className="hidden lg:table-cell">Bayar</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
                   </TableRow>
@@ -236,7 +257,11 @@ const AdminPage = () => {
                         <TableCell className="hidden lg:table-cell text-sm">
                           {p.registrationData.profession}
                         </TableCell>
-                        <TableCell className="hidden lg:table-cell text-sm capitalize">{p.paymentMethod}</TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm">
+                          <Badge variant={p.paymentStatus === "PAID" ? "default" : "secondary"} className="text-xs">
+                            {p.paymentStatus || "N/A"}
+                          </Badge>
+                        </TableCell>
                         <TableCell>
                           <Badge variant={sc.variant} className="gap-1 text-xs">
                             <sc.icon className="h-3 w-3" />

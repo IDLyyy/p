@@ -24,9 +24,9 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handlePaymentSuccess = (orderId: string, status: string) => {
+  const handlePaymentSuccess = async (orderId: string, status: string) => {
     if (registrationData) {
-      addParticipant(registrationData, "midtrans", orderId);
+      await addParticipant(registrationData, "midtrans", orderId);
     }
     setStep("success");
     window.scrollTo({ top: 0, behavior: "smooth" });
