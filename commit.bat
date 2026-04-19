@@ -1,4 +1,4 @@
 @echo off
 git add -A
-git commit -m "feat: tema navy blue + liquid glass elements"
+git commit -m "feat: tambah kolom Jam Daftar dan Keterangan di admin"
 git push origin main

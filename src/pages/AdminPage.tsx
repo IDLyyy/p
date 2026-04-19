@@ -236,6 +236,8 @@ const AdminPage = () => {
                     <TableHead className="hidden md:table-cell">Email</TableHead>
                     <TableHead className="hidden sm:table-cell">WhatsApp</TableHead>
                     <TableHead className="hidden lg:table-cell">Profesi</TableHead>
+                    <TableHead className="hidden xl:table-cell">Keterangan</TableHead>
+                    <TableHead className="hidden lg:table-cell">Jam Daftar</TableHead>
                     <TableHead className="hidden lg:table-cell">Bayar</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Aksi</TableHead>
@@ -256,6 +258,21 @@ const AdminPage = () => {
                         <TableCell className="hidden sm:table-cell text-sm">{p.registrationData.phone}</TableCell>
                         <TableCell className="hidden lg:table-cell text-sm">
                           {p.registrationData.profession}
+                        </TableCell>
+                        <TableCell className="hidden xl:table-cell text-sm max-w-[200px]">
+                          <p className="truncate text-muted-foreground" title={p.registrationData.background}>
+                            {p.registrationData.background}
+                          </p>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm text-muted-foreground whitespace-nowrap">
+                          {new Date(p.registeredAt).toLocaleString("id-ID", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            timeZone: "Asia/Jakarta",
+                          })}
                         </TableCell>
                         <TableCell className="hidden lg:table-cell text-sm">
                           <Badge variant={p.paymentStatus === "PAID" ? "default" : "secondary"} className="text-xs">
