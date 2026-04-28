@@ -3,13 +3,13 @@
 // ============================================
 
 export const WEBINAR_CONFIG = {
-  title: "Masterclass: Strategi Digital Marketing 2026",
+  title: "Dari Layar Menjadi Strategi Bisnis yang Bersinar",
   subtitle: "Pelajari strategi terbaru untuk mengembangkan bisnis Anda secara online",
   date: "Sabtu, 10 Mei 2026",
   time: "09:00 - 12:00 WIB",
-  price: "Rp 149.000",
-  speaker: "Dr. Ahmad Fauzi, M.Kom",
-  speakerTitle: "Digital Marketing Expert & CEO TechGrowth Indonesia",
+  price: "Rp 35.000",
+  speaker: "Abah Mul",
+  speakerTitle: "Pengisi Webinar",
 
   benefits: [
     "Strategi konten yang terbukti meningkatkan engagement 300%",
