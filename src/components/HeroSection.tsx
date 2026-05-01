@@ -112,7 +112,11 @@ const HeroSection = ({ onRegisterClick }: HeroSectionProps) => {
               variant="cta"
               size="lg"
               className="text-base md:text-lg px-10 py-6 rounded-xl shadow-lg"
-              onClick={onRegisterClick}
+              onClick={() =>
+                document
+                  .getElementById("pricing-section")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
             >
               Daftar Sekarang
             </Button>
@@ -188,7 +192,9 @@ const HeroSection = ({ onRegisterClick }: HeroSectionProps) => {
       </section>
 
       {/* ═══════════ SLIDE 3: Pricing — like sss1.png ═══════════ */}
-      <PricingSection onRegisterClick={onRegisterClick} />
+      <div id="pricing-section">
+        <PricingSection onRegisterClick={onRegisterClick} />
+      </div>
     </>
   );
 };
