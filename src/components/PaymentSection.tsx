@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WEBINAR_CONFIG } from "@/config/webinar";
-import { Loader2, ShieldCheck } from "lucide-react";
+import { Loader2, ShieldCheck, Crown, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { RegistrationData } from "@/components/RegistrationForm";
@@ -35,8 +35,9 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
   const [loading, setLoading] = useState(false);
   const [snapReady, setSnapReady] = useState(false);
 
-  // Parse harga "Rp 149.000" -> 149000
-  const amount = parseInt(WEBINAR_CONFIG.price.replace(/\D/g, ""), 10) || 0;
+  const isVip = registrationData.ticketType === "vip";
+  const amount = isVip ? WEBINAR_CONFIG.amountVip : WEBINAR_CONFIG.amountRegular;
+  const priceLabel = isVip ? WEBINAR_CONFIG.priceVip : WEBINAR_CONFIG.priceRegular;
 
   const handlePay = async () => {
     setLoading(true);
@@ -139,8 +140,23 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
             Pembayaran
           </h2>
           <p className="text-muted-foreground text-center mb-8">
-            Total: <span className="font-bold text-primary">{WEBINAR_CONFIG.price}</span>
+            Total: <span className="font-bold text-primary">{priceLabel}</span>
           </p>
+
+          {/* Ticket type badge */}
+          <div className="flex justify-center mb-6">
+            {isVip ? (
+              <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 px-4 py-2 rounded-full">
+                <Crown className="h-4 w-4 text-yellow-400" />
+                <span className="text-sm font-bold text-yellow-600">Paket VIP</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 bg-slate-100 border border-slate-300 px-4 py-2 rounded-full">
+                <Star className="h-4 w-4 text-slate-500" />
+                <span className="text-sm font-bold text-slate-600">Paket Reguler</span>
+              </div>
+            )}
+          </div>
 
           {/* Order summary */}
           <div className="rounded-xl bg-secondary p-4 md:p-6 mb-6 space-y-2 text-sm">
@@ -156,9 +172,19 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
               <span className="text-muted-foreground">WhatsApp</span>
               <span className="font-medium text-foreground">{registrationData.phone}</span>
             </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Paket</span>
+              <span className="font-medium text-foreground">{isVip ? "VIP" : "Reguler"}</span>
+            </div>
+            {registrationData.referralCode && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Kode Referral</span>
+                <span className="font-medium text-foreground">{registrationData.referralCode}</span>
+              </div>
+            )}
             <div className="border-t border-border pt-2 mt-2 flex justify-between">
               <span className="font-semibold text-foreground">Total</span>
-              <span className="font-bold text-primary">{WEBINAR_CONFIG.price}</span>
+              <span className="font-bold text-primary">{priceLabel}</span>
             </div>
           </div>
 

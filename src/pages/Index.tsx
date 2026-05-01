@@ -32,7 +32,7 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (step === "success") return <SuccessPage />;
+  if (step === "success") return <SuccessPage ticketType={registrationData?.ticketType || "regular"} />;
 
   return (
     <div className="min-h-screen">

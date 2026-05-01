@@ -5,10 +5,14 @@
 export const WEBINAR_CONFIG = {
   title: "Dari Layar Menjadi Strategi Bisnis yang Bersinar",
   subtitle: "Pelajari strategi terbaru untuk mengembangkan bisnis Anda secara online",
-  date: "Sabtu, 10 Mei 2026",
-  time: "09:00 - 12:00 WIB",
-  price: "Rp 35.000",
-  speaker: "Abah Mul",
+  date: "Jumat, 23 Mei 2026",
+  time: "20:15 WIB - Selesai",
+  price: "Rp 75.000",
+  priceVip: "Rp 75.000",
+  priceRegular: "Rp 50.000",
+  amountVip: 75000,
+  amountRegular: 50000,
+  speaker: "Abah Mulyono & KH Syihabuddin Abdul Mu'iz",
   speakerTitle: "Pengisi Webinar",
 
   benefits: [
@@ -21,8 +25,10 @@ export const WEBINAR_CONFIG = {
   ],
 
   // Link WhatsApp Group setelah pembayaran
-  whatsappGroupLink: "https://chat.whatsapp.com/GANTI_DENGAN_LINK_ANDA",
+  whatsappGroupLinkVip: "https://chat.whatsapp.com/EeKsAWlZH9oBMgBo6nPb8N",
+  whatsappGroupLinkRegular: "https://chat.whatsapp.com/Lo3ZGjiNsK5BDOYOQJvvvo",
+  whatsappGroupLink: "https://chat.whatsapp.com/Lo3ZGjiNsK5BDOYOQJvvvo",
 
   // Password admin (ubah sesuai kebutuhan)
-  adminPassword: "admin123",
+  adminPassword: "MARVERJAYAAA",
 };

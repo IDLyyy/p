@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowLeft, Search, Trash2, Users, CheckCircle2, Clock, XCircle, Lock, Download, RefreshCw } from "lucide-react";
+import { ArrowLeft, Search, Trash2, Users, CheckCircle2, Clock, XCircle, Lock, Download, RefreshCw, Crown, Star, Plus, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { WEBINAR_CONFIG } from "@/config/webinar";
@@ -26,6 +26,19 @@ const AdminPage = () => {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<"vip" | "regular">("vip");
+
+  // Referral code management
+  const [referralCodes, setReferralCodes] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem("referral_codes") || "[]");
+    } catch {
+      return [];
+    }
+  });
+  const [newReferralCode, setNewReferralCode] = useState("");
+  const [referralSearch, setReferralSearch] = useState("");
+  const [showReferralPanel, setShowReferralPanel] = useState(false);
 
   const refresh = async () => {
     setLoading(true);
@@ -52,6 +65,32 @@ const AdminPage = () => {
     sessionStorage.removeItem("admin_auth");
   };
 
+  const addReferralCode = () => {
+    const code = newReferralCode.trim().toUpperCase();
+    if (!code) return;
+    if (referralCodes.includes(code)) {
+      toast.error("Kode referral sudah ada");
+      return;
+    }
+    const updated = [...referralCodes, code];
+    setReferralCodes(updated);
+    localStorage.setItem("referral_codes", JSON.stringify(updated));
+    setNewReferralCode("");
+    toast.success(`Kode referral "${code}" berhasil ditambahkan`);
+  };
+
+  const removeReferralCode = (code: string) => {
+    const updated = referralCodes.filter((c) => c !== code);
+    setReferralCodes(updated);
+    localStorage.setItem("referral_codes", JSON.stringify(updated));
+    toast.success(`Kode referral "${code}" berhasil dihapus`);
+  };
+
+  // Get participants who used a specific referral code
+  const getParticipantsByReferral = (code: string) => {
+    return participants.filter((p) => p.registrationData.referralCode?.toUpperCase() === code.toUpperCase());
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -60,8 +99,8 @@ const AdminPage = () => {
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3">
               <Lock className="h-7 w-7 text-primary" />
             </div>
-            <h1 className="text-xl font-bold text-foreground">Admin Login</h1>
-            <p className="text-sm text-muted-foreground">Masukkan password untuk mengakses panel admin</p>
+            <h1 className="text-xl font-bold text-foreground">Idaroh Login</h1>
+            <p className="text-sm text-muted-foreground">Masukkan password untuk mengakses panel idaroh</p>
           </div>
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
@@ -87,11 +126,17 @@ const AdminPage = () => {
     );
   }
 
-  const filtered = participants.filter((p) => {
+  // Filter by ticket type (tab)
+  const tabParticipants = participants.filter(
+    (p) => (p.registrationData.ticketType || "regular") === activeTab
+  );
+
+  const filtered = tabParticipants.filter((p) => {
     const matchSearch =
       p.registrationData.fullName.toLowerCase().includes(search.toLowerCase()) ||
       p.registrationData.email.toLowerCase().includes(search.toLowerCase()) ||
-      p.registrationData.phone.includes(search);
+      p.registrationData.phone.includes(search) ||
+      (p.registrationData.referralCode || "").toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === "all" || p.status === filterStatus;
     return matchSearch && matchStatus;
   });
@@ -110,21 +155,26 @@ const AdminPage = () => {
     }
   };
 
+  const vipCount = participants.filter((p) => (p.registrationData.ticketType || "regular") === "vip").length;
+  const regCount = participants.filter((p) => (p.registrationData.ticketType || "regular") === "regular").length;
+
   const stats = {
-    total: participants.length,
-    pending: participants.filter((p) => p.status === "pending").length,
-    verified: participants.filter((p) => p.status === "verified").length,
-    rejected: participants.filter((p) => p.status === "rejected").length,
+    total: tabParticipants.length,
+    pending: tabParticipants.filter((p) => p.status === "pending").length,
+    verified: tabParticipants.filter((p) => p.status === "verified").length,
+    rejected: tabParticipants.filter((p) => p.status === "rejected").length,
   };
 
   const exportCSV = () => {
-    const headers = ["Nama", "Email", "WhatsApp", "Profesi", "Latar Belakang", "Order ID", "Status Bayar", "Jumlah", "Tanggal Daftar", "Status"];
-    const rows = participants.map((p) => [
+    const headers = ["Nama", "Email", "WhatsApp", "Profesi", "Latar Belakang", "Paket", "Kode Referral", "Order ID", "Status Bayar", "Jumlah", "Tanggal Daftar", "Status"];
+    const rows = tabParticipants.map((p) => [
       p.registrationData.fullName,
       p.registrationData.email,
       p.registrationData.phone,
       p.registrationData.profession,
       p.registrationData.background,
+      p.registrationData.ticketType || "regular",
+      p.registrationData.referralCode || "",
       p.proofFileName,
       p.paymentStatus || "",
       p.amount || "",
@@ -136,11 +186,18 @@ const AdminPage = () => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `peserta-webinar-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `peserta-${activeTab}-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("File CSV berhasil diunduh");
   };
+
+  // Referral search results
+  const referralSearchResults = referralSearch
+    ? participants.filter((p) =>
+        (p.registrationData.referralCode || "").toUpperCase().includes(referralSearch.toUpperCase())
+      )
+    : [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -152,16 +209,20 @@ const AdminPage = () => {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Panel Admin</h1>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Panel Idaroh</h1>
               <p className="text-muted-foreground text-sm">Kelola pendaftaran peserta webinar</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Button variant="outline" size="sm" onClick={() => setShowReferralPanel(!showReferralPanel)}>
+              <Tag className="h-4 w-4 mr-1" />
+              Referral
+            </Button>
             <Button variant="outline" size="sm" onClick={refresh} disabled={loading}>
               <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} />
               Refresh
             </Button>
-            <Button variant="outline" size="sm" onClick={exportCSV} disabled={participants.length === 0}>
+            <Button variant="outline" size="sm" onClick={exportCSV} disabled={tabParticipants.length === 0}>
               <Download className="h-4 w-4 mr-1" />
               Export CSV
             </Button>
@@ -169,6 +230,103 @@ const AdminPage = () => {
               Logout
             </Button>
           </div>
+        </div>
+
+        {/* Referral Code Management Panel */}
+        {showReferralPanel && (
+          <div className="bg-card rounded-xl shadow-card p-6 mb-8 space-y-4">
+            <h3 className="font-bold text-foreground flex items-center gap-2">
+              <Tag className="h-5 w-5 text-primary" />
+              Manajemen Kode Referral
+            </h3>
+
+            {/* Add referral */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="Masukkan kode referral baru..."
+                value={newReferralCode}
+                onChange={(e) => setNewReferralCode(e.target.value.toUpperCase())}
+                onKeyDown={(e) => { if (e.key === "Enter") addReferralCode(); }}
+                className="flex-1"
+              />
+              <Button onClick={addReferralCode} size="sm">
+                <Plus className="h-4 w-4 mr-1" />
+                Tambah
+              </Button>
+            </div>
+
+            {/* Existing codes */}
+            {referralCodes.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {referralCodes.map((code) => {
+                  const count = getParticipantsByReferral(code).length;
+                  return (
+                    <div key={code} className="flex items-center gap-1 bg-secondary px-3 py-1.5 rounded-full">
+                      <span className="text-sm font-medium text-foreground">{code}</span>
+                      <Badge variant="secondary" className="text-xs">{count} orang</Badge>
+                      <button
+                        onClick={() => removeReferralCode(code)}
+                        className="ml-1 text-muted-foreground hover:text-destructive transition-colors"
+                      >
+                        <XCircle className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Search by referral */}
+            <div className="space-y-2">
+              <Label className="text-sm text-muted-foreground">Cari peserta berdasarkan kode referral</Label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Ketik kode referral..."
+                  value={referralSearch}
+                  onChange={(e) => setReferralSearch(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              {referralSearch && (
+                <div className="rounded-lg border border-border p-3 space-y-2 max-h-60 overflow-y-auto">
+                  {referralSearchResults.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-2">Tidak ada peserta dengan kode referral ini</p>
+                  ) : (
+                    referralSearchResults.map((p) => (
+                      <div key={p.id} className="flex items-center justify-between text-sm py-1 border-b border-border last:border-0">
+                        <div>
+                          <p className="font-medium text-foreground">{p.registrationData.fullName}</p>
+                          <p className="text-xs text-muted-foreground">{p.registrationData.email} • {p.registrationData.ticketType?.toUpperCase()}</p>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">{p.registrationData.referralCode}</Badge>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* VIP / Regular Tabs */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            variant={activeTab === "vip" ? "default" : "outline"}
+            onClick={() => setActiveTab("vip")}
+            className={`gap-2 ${activeTab === "vip" ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-black hover:from-yellow-400 hover:to-amber-500" : ""}`}
+          >
+            <Crown className="h-4 w-4" />
+            VIP ({vipCount})
+          </Button>
+          <Button
+            variant={activeTab === "regular" ? "default" : "outline"}
+            onClick={() => setActiveTab("regular")}
+            className="gap-2"
+          >
+            <Star className="h-4 w-4" />
+            Reguler ({regCount})
+          </Button>
         </div>
 
         {/* Stats */}
@@ -194,7 +352,7 @@ const AdminPage = () => {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Cari nama, email, atau nomor HP..."
+              placeholder="Cari nama, email, nomor HP, atau kode referral..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -223,7 +381,7 @@ const AdminPage = () => {
           <div className="bg-card rounded-xl shadow-card p-12 text-center">
             <Users className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
             <p className="text-muted-foreground">
-              {participants.length === 0 ? "Belum ada peserta yang terdaftar" : "Tidak ada hasil yang sesuai filter"}
+              {tabParticipants.length === 0 ? `Belum ada peserta ${activeTab.toUpperCase()} yang terdaftar` : "Tidak ada hasil yang sesuai filter"}
             </p>
           </div>
         ) : (
@@ -237,6 +395,7 @@ const AdminPage = () => {
                     <TableHead className="hidden sm:table-cell">WhatsApp</TableHead>
                     <TableHead className="hidden lg:table-cell">Profesi</TableHead>
                     <TableHead className="hidden xl:table-cell">Keterangan</TableHead>
+                    <TableHead className="hidden lg:table-cell">Referral</TableHead>
                     <TableHead className="hidden lg:table-cell">Jam Daftar</TableHead>
                     <TableHead className="hidden lg:table-cell">Bayar</TableHead>
                     <TableHead>Status</TableHead>
@@ -263,6 +422,13 @@ const AdminPage = () => {
                           <p className="truncate text-muted-foreground" title={p.registrationData.background}>
                             {p.registrationData.background}
                           </p>
+                        </TableCell>
+                        <TableCell className="hidden lg:table-cell text-sm">
+                          {p.registrationData.referralCode ? (
+                            <Badge variant="secondary" className="text-xs">{p.registrationData.referralCode}</Badge>
+                          ) : (
+                            <span className="text-muted-foreground text-xs">—</span>
+                          )}
                         </TableCell>
                         <TableCell className="hidden lg:table-cell text-sm text-muted-foreground whitespace-nowrap">
                           {new Date(p.registeredAt).toLocaleString("id-ID", {

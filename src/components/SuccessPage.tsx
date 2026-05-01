@@ -3,22 +3,31 @@ import { Button } from "@/components/ui/button";
 import { WEBINAR_CONFIG } from "@/config/webinar";
 import { CheckCircle2, MessageCircle } from "lucide-react";
 
-const SuccessPage = () => {
+interface SuccessPageProps {
+  ticketType?: "vip" | "regular";
+}
+
+const SuccessPage = ({ ticketType = "regular" }: SuccessPageProps) => {
   const [countdown, setCountdown] = useState(10);
+
+  const whatsappLink =
+    ticketType === "vip"
+      ? WEBINAR_CONFIG.whatsappGroupLinkVip
+      : WEBINAR_CONFIG.whatsappGroupLinkRegular;
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          window.open(WEBINAR_CONFIG.whatsappGroupLink, "_blank");
+          window.open(whatsappLink, "_blank");
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, [whatsappLink]);
 
   return (
     <section className="min-h-screen flex items-center justify-center py-16">
@@ -40,17 +49,18 @@ const SuccessPage = () => {
           <div className="rounded-xl bg-secondary p-4 text-sm text-secondary-foreground">
             <p>📅 {WEBINAR_CONFIG.date}</p>
             <p>🕐 {WEBINAR_CONFIG.time}</p>
+            <p>🎫 Paket: {ticketType === "vip" ? "VIP" : "Reguler"}</p>
           </div>
 
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              Anda akan dialihkan ke grup WhatsApp dalam <strong className="text-primary">{countdown} detik</strong>...
+              Anda akan dialihkan ke grup WhatsApp {ticketType === "vip" ? "VIP" : "Reguler"} dalam <strong className="text-primary">{countdown} detik</strong>...
             </p>
             <Button
               variant="cta"
               size="lg"
               className="w-full rounded-xl py-6 text-base gap-2"
-              onClick={() => window.open(WEBINAR_CONFIG.whatsappGroupLink, "_blank")}
+              onClick={() => window.open(whatsappLink, "_blank")}
             >
               <MessageCircle className="h-5 w-5" />
               Gabung Grup WhatsApp Sekarang
