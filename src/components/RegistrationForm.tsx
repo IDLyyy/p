@@ -54,22 +54,25 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
   };
 
   return (
-    <section id="registration-form" className="py-16 md:py-24">
-      <div className="container max-w-2xl">
-        <div className="liquid-glass-card rounded-2xl shadow-elevated p-6 md:p-10 animate-scale-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-2">
-            Formulir Pendaftaran
-          </h2>
-          <p className="text-muted-foreground text-center mb-8">
-            Isi data diri Anda untuk mendaftar webinar
-          </p>
+    <section id="registration-form" className="py-16 md:py-24 bg-white">
+      <div className="container max-w-xl">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-elevated p-6 md:p-10">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold text-primary uppercase tracking-widest mb-2">Pendaftaran</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+              Formulir Pendaftaran
+            </h2>
+            <p className="text-muted-foreground text-sm mt-2">
+              Isi data diri Anda untuk mendaftar webinar
+            </p>
+          </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Ticket Type */}
-            <div className="space-y-2">
-              <Label htmlFor="ticketType">Pilih Paket</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="ticketType" className="text-sm font-medium">Pilih Paket</Label>
               <Select value={form.ticketType} onValueChange={(v) => update("ticketType", v)}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -90,49 +93,53 @@ const RegistrationForm = ({ onSubmit }: RegistrationFormProps) => {
             </div>
 
             {/* Name */}
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Nama Lengkap</Label>
-              <Input id="fullName" placeholder="Masukkan nama lengkap" value={form.fullName} onChange={(e) => update("fullName", e.target.value)} />
-              {errors.fullName && <p className="text-sm text-destructive">{errors.fullName}</p>}
+            <div className="space-y-1.5">
+              <Label htmlFor="fullName" className="text-sm font-medium">Nama Lengkap</Label>
+              <Input id="fullName" className="h-11" placeholder="Masukkan nama lengkap" value={form.fullName} onChange={(e) => update("fullName", e.target.value)} />
+              {errors.fullName && <p className="text-xs text-destructive">{errors.fullName}</p>}
             </div>
 
             {/* Email */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Alamat Email</Label>
-              <Input id="email" type="email" placeholder="contoh@email.com" value={form.email} onChange={(e) => update("email", e.target.value)} />
-              {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-medium">Alamat Email</Label>
+              <Input id="email" className="h-11" type="email" placeholder="contoh@email.com" value={form.email} onChange={(e) => update("email", e.target.value)} />
+              {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
 
             {/* Phone */}
-            <div className="space-y-2">
-              <Label htmlFor="phone">Nomor WhatsApp</Label>
-              <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
-              {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
+            <div className="space-y-1.5">
+              <Label htmlFor="phone" className="text-sm font-medium">Nomor WhatsApp</Label>
+              <Input id="phone" className="h-11" type="tel" placeholder="08xxxxxxxxxx" value={form.phone} onChange={(e) => update("phone", e.target.value)} />
+              {errors.phone && <p className="text-xs text-destructive">{errors.phone}</p>}
             </div>
 
             {/* Profession */}
-            <div className="space-y-2">
-              <Label htmlFor="profession">Profesi</Label>
-              <Input id="profession" placeholder="Tuliskan profesi Anda" value={form.profession} onChange={(e) => update("profession", e.target.value)} />
-              {errors.profession && <p className="text-sm text-destructive">{errors.profession}</p>}
+            <div className="space-y-1.5">
+              <Label htmlFor="profession" className="text-sm font-medium">Profesi</Label>
+              <Input id="profession" className="h-11" placeholder="Tuliskan profesi Anda" value={form.profession} onChange={(e) => update("profession", e.target.value)} />
+              {errors.profession && <p className="text-xs text-destructive">{errors.profession}</p>}
             </div>
 
             {/* Background */}
-            <div className="space-y-2">
-              <Label htmlFor="background">Latar Belakang</Label>
+            <div className="space-y-1.5">
+              <Label htmlFor="background" className="text-sm font-medium">Latar Belakang</Label>
               <Textarea id="background" placeholder="Ceritakan pendidikan atau pengalaman Anda yang relevan..." rows={3} value={form.background} onChange={(e) => update("background", e.target.value)} />
-              {errors.background && <p className="text-sm text-destructive">{errors.background}</p>}
+              {errors.background && <p className="text-xs text-destructive">{errors.background}</p>}
             </div>
 
             {/* Referral Code */}
-            <div className="space-y-2">
-              <Label htmlFor="referralCode">Kode Referral <span className="text-muted-foreground text-xs">(opsional)</span></Label>
-              <Input id="referralCode" placeholder="Masukkan kode referral jika ada" value={form.referralCode} onChange={(e) => update("referralCode", e.target.value.toUpperCase())} />
+            <div className="space-y-1.5">
+              <Label htmlFor="referralCode" className="text-sm font-medium">
+                Kode Referral <span className="text-muted-foreground font-normal">(opsional)</span>
+              </Label>
+              <Input id="referralCode" className="h-11" placeholder="Masukkan kode referral jika ada" value={form.referralCode} onChange={(e) => update("referralCode", e.target.value.toUpperCase())} />
             </div>
 
-            <Button type="submit" variant="cta" size="lg" className="w-full text-base rounded-xl py-6">
-              Lanjut ke Pembayaran
-            </Button>
+            <div className="pt-2">
+              <Button type="submit" variant="cta" size="lg" className="w-full text-sm font-semibold rounded-xl py-5">
+                Lanjut ke Pembayaran
+              </Button>
+            </div>
           </form>
         </div>
       </div>

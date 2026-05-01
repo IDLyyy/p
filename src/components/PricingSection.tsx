@@ -41,18 +41,18 @@ const useParticleCanvas = (
     window.addEventListener("resize", resize);
 
     const particles: Particle[] = [];
-    const count = 18;
+    const count = 14;
 
     for (let i = 0; i < count; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         size: Math.random() * 10 + 6,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: -Math.random() * 0.6 - 0.2,
-        opacity: Math.random() * 0.5 + 0.15,
+        speedX: (Math.random() - 0.5) * 0.4,
+        speedY: -Math.random() * 0.5 - 0.15,
+        opacity: Math.random() * 0.4 + 0.1,
         rotation: Math.random() * Math.PI * 2,
-        rotationSpeed: (Math.random() - 0.5) * 0.02,
+        rotationSpeed: (Math.random() - 0.5) * 0.015,
       });
     }
 
@@ -86,7 +86,7 @@ const useParticleCanvas = (
       ctx.closePath();
       ctx.fillStyle = color;
       ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 6;
       ctx.fill();
       ctx.restore();
     };
@@ -101,8 +101,8 @@ const useParticleCanvas = (
         p.x += p.speedX;
         p.y += p.speedY;
         p.rotation += p.rotationSpeed;
-        p.opacity += (Math.random() - 0.5) * 0.01;
-        p.opacity = Math.max(0.1, Math.min(0.6, p.opacity));
+        p.opacity += (Math.random() - 0.5) * 0.008;
+        p.opacity = Math.max(0.08, Math.min(0.5, p.opacity));
 
         if (p.y < -20) {
           p.y = canvas.height + 10;
@@ -124,49 +124,70 @@ const useParticleCanvas = (
 
 /* ─── VIP Benefits ─── */
 const vipBenefits = [
-  "Background khusus",
-  "E-Sertifikat",
-  "Prioritas pertanyaan",
-  "Rekaman Zoom",
-  "Grup khusus terpisah",
+  "Strategi Bisnis",
+  "Prioritas Pertanyaan",
+  "Sertifikat",
+  "Background Khusus",
+  "Tiket Webinar",
 ];
 
 /* ─── Regular Benefits ─── */
 const regularBenefits = [
-  "Background peserta",
-  "E-Sertifikat",
-  "Grup khusus",
+  "Tiket Webinar",
+  "Strategi Bisnis",
+  "Sertifikat",
 ];
 
-/* ─── Floating crypto/gold ornaments SVG ─── */
+/* ─── Floating crypto/finance ornaments ─── */
 const CryptoOrnaments = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
-    {/* Bitcoin symbols */}
-    <svg className="absolute top-[8%] left-[3%] w-10 h-10 text-yellow-500/15 animate-float-blob" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M11.5 11.5V7.5H13C13.83 7.5 14.5 8.17 14.5 9C14.5 9.83 13.83 10.5 13 10.5H11.5M11.5 11.5H13.5C14.33 11.5 15 12.17 15 13C15 13.83 14.33 14.5 13.5 14.5H11.5M11.5 11.5V14.5M11.5 7.5V6M11.5 7.5H10M11.5 14.5V16M11.5 14.5H10M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2S22 6.48 22 12S17.52 22 12 22Z"/>
-    </svg>
-    <svg className="absolute top-[20%] right-[8%] w-8 h-8 text-yellow-400/12 animate-float-blob" style={{animationDelay:'3s'}} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M11.5 11.5V7.5H13C13.83 7.5 14.5 8.17 14.5 9C14.5 9.83 13.83 10.5 13 10.5H11.5M11.5 11.5H13.5C14.33 11.5 15 12.17 15 13C15 13.83 14.33 14.5 13.5 14.5H11.5M11.5 11.5V14.5M11.5 7.5V6M11.5 7.5H10M11.5 14.5V16M11.5 14.5H10M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2S22 6.48 22 12S17.52 22 12 22Z"/>
-    </svg>
-    {/* Dollar signs */}
-    <div className="absolute top-[60%] left-[6%] text-3xl text-green-400/10 animate-float-blob" style={{animationDelay:'6s'}}>$</div>
-    <div className="absolute top-[35%] right-[4%] text-2xl text-green-400/10 animate-float-blob" style={{animationDelay:'2s'}}>$</div>
-    {/* Gold coins / chart icons */}
-    <svg className="absolute bottom-[15%] left-[12%] w-10 h-10 text-yellow-500/12 animate-float-blob" style={{animationDelay:'5s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10l4-4 4 4M8 14l4 4 4-4"/>
-    </svg>
-    <svg className="absolute top-[10%] left-[45%] w-8 h-8 text-amber-400/10 animate-float-blob" style={{animationDelay:'7s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+    {/* Chart icons */}
+    <svg className="absolute top-[6%] left-[3%] w-10 h-10 text-yellow-500/20 animate-float-blob" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
       <path d="M3 17l4-4 4 4 4-8 6 6"/>
     </svg>
-    <svg className="absolute bottom-[25%] right-[10%] w-9 h-9 text-yellow-400/10 animate-float-blob" style={{animationDelay:'9s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 17l3-5 3 3 4-7"/>
+    <svg className="absolute top-[15%] right-[5%] w-12 h-12 text-green-400/15 animate-float-blob" style={{animationDelay:'3s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M3 17l4-4 4 4 4-8 6 6" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M17 7l4 0 0 4" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
-    {/* Ethereum */}
-    <svg className="absolute bottom-[8%] right-[30%] w-7 h-7 text-blue-300/10 animate-float-blob" style={{animationDelay:'4s'}} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 1.75l-6.25 10.5L12 16l6.25-3.75L12 1.75zM12 22.25l-6.25-8.5L12 17.5l6.25-3.75L12 22.25z"/>
+
+    {/* Bitcoin circles */}
+    <svg className="absolute top-[50%] left-[2%] w-10 h-10 text-yellow-500/15 animate-float-blob" style={{animationDelay:'5s'}} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M11.5 11.5V7.5H13C13.83 7.5 14.5 8.17 14.5 9C14.5 9.83 13.83 10.5 13 10.5H11.5M11.5 11.5H13.5C14.33 11.5 15 12.17 15 13C15 13.83 14.33 14.5 13.5 14.5H11.5M11.5 11.5V14.5M11.5 7.5V6M11.5 7.5H10M11.5 14.5V16M11.5 14.5H10M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2S22 6.48 22 12S17.52 22 12 22Z"/>
     </svg>
-    <div className="absolute top-[50%] left-[30%] text-xl text-yellow-500/8 animate-float-blob" style={{animationDelay:'10s'}}>₿</div>
-    <div className="absolute top-[75%] right-[20%] text-lg text-amber-400/8 animate-float-blob" style={{animationDelay:'8s'}}>💰</div>
+
+    {/* Dollar signs */}
+    <div className="absolute top-[70%] left-[8%] text-3xl text-green-400/12 animate-float-blob" style={{animationDelay:'6s'}}>$</div>
+    <div className="absolute top-[30%] right-[3%] text-2xl text-green-400/12 animate-float-blob" style={{animationDelay:'2s'}}>$</div>
+
+    {/* Gold coins */}
+    <svg className="absolute bottom-[12%] left-[15%] w-9 h-9 text-yellow-500/12 animate-float-blob" style={{animationDelay:'7s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10l4-4 4 4"/>
+    </svg>
+
+    {/* Stock chart right side */}
+    <svg className="absolute top-[8%] right-[15%] w-12 h-12 text-yellow-400/10 animate-float-blob" style={{animationDelay:'4s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 17l3-5 3 3 4-7"/>
+    </svg>
+
+    {/* Bitcoin bottom-right */}
+    <svg className="absolute bottom-[8%] right-[5%] w-8 h-8 text-yellow-500/10 animate-float-blob" style={{animationDelay:'9s'}} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M11.5 11.5V7.5H13C13.83 7.5 14.5 8.17 14.5 9C14.5 9.83 13.83 10.5 13 10.5H11.5M11.5 11.5H13.5C14.33 11.5 15 12.17 15 13C15 13.83 14.33 14.5 13.5 14.5H11.5M11.5 11.5V14.5M11.5 7.5V6M11.5 7.5H10M11.5 14.5V16M11.5 14.5H10M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2S22 6.48 22 12S17.52 22 12 22Z"/>
+    </svg>
+
+    {/* Dollar → Bitcoin */}
+    <div className="absolute bottom-[20%] left-[35%] text-sm text-yellow-500/10 animate-float-blob" style={{animationDelay:'10s'}}>
+      <span className="text-green-400/15">$</span> → <span className="text-yellow-500/15">₿</span>
+    </div>
+
+    {/* Misc finance */}
+    <svg className="absolute top-[40%] right-[10%] w-8 h-8 text-yellow-400/8 animate-float-blob" style={{animationDelay:'8s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M12 2v20M4 12h16M7 7l10 10M17 7l-10 10"/>
+    </svg>
+
+    {/* Gold bar icon */}
+    <svg className="absolute bottom-[35%] right-[25%] w-10 h-10 text-amber-400/10 animate-float-blob" style={{animationDelay:'11s'}} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <rect x="3" y="14" width="18" height="6" rx="1"/><rect x="5" y="8" width="14" height="6" rx="1"/><rect x="7" y="2" width="10" height="6" rx="1"/>
+    </svg>
   </div>
 );
 
@@ -175,169 +196,129 @@ const PricingSection = ({ onRegisterClick }: PricingSectionProps) => {
   const regCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useParticleCanvas(vipCanvasRef, "crown", "#FFD700");
-  useParticleCanvas(regCanvasRef, "star", "#C0C0C0");
+  useParticleCanvas(regCanvasRef, "star", "#9ca3af");
 
   return (
     <section
       className="py-16 md:py-24 relative overflow-hidden"
-      style={{
-        background: "linear-gradient(180deg, #0d0d0d 0%, #111 40%, #0a0a0a 100%)",
-      }}
+      style={{ background: "#0d0d0d" }}
     >
-      {/* Crypto ornaments background */}
       <CryptoOrnaments />
 
-      {/* Background ornaments */}
-      <div className="absolute inset-0 pointer-events-none z-[0]">
-        <div className="absolute top-[10%] left-[5%] w-[300px] h-[300px] rounded-full bg-[hsl(45,100%,50%,0.04)] blur-[80px]" />
-        <div className="absolute bottom-[10%] right-[5%] w-[250px] h-[250px] rounded-full bg-[hsl(221,83%,53%,0.04)] blur-[80px]" />
-      </div>
-
       <div className="container max-w-5xl relative z-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-3">
-          Pilih Paket Pendaftaran
-        </h2>
-        <p className="text-center text-gray-400 mb-12 max-w-lg mx-auto">
-          Pilih paket yang sesuai dengan kebutuhan Anda
-        </p>
+        <div className="text-center mb-12">
+          <p className="text-sm font-semibold uppercase tracking-widest mb-2 text-yellow-400">
+            Paket Pendaftaran
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white">
+            Pilih Paket yang Sesuai
+          </h2>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
-          {/* ═══════════ VIP CARD ═══════════ */}
-          <div className="relative group order-2 md:order-1">
-            {/* Particle canvas */}
+          {/* ═══════════ TIKET VIP — gold border like sss1.png ═══════════ */}
+          <div className="relative group">
             <canvas
               ref={vipCanvasRef}
               className="absolute inset-0 w-full h-full pointer-events-none z-10 rounded-2xl"
             />
 
-            {/* Glow border */}
-            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-yellow-400 via-amber-500 to-yellow-600 opacity-60 blur-sm group-hover:opacity-90 transition-opacity duration-500 animate-pulse-glow" />
+            {/* Gold border glow */}
+            <div className="absolute -inset-[2px] rounded-2xl animate-pulse-glow"
+              style={{
+                background: "linear-gradient(135deg, #d4a017, #f0c040, #d4a017)",
+                opacity: 0.7,
+                filter: "blur(2px)",
+              }}
+            />
 
-            {/* Card */}
-            <div className="relative rounded-2xl p-6 md:p-8 bg-gradient-to-br from-[#1a1505] via-[#1c1a0e] to-[#0f0d05] border border-yellow-500/30 overflow-hidden z-[5]">
-              {/* Shimmer overlay */}
-              <div
-                className="absolute inset-0 opacity-10 pointer-events-none animate-shimmer"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(110deg, transparent 30%, rgba(255,215,0,0.15) 50%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                }}
-              />
-
-              {/* Floating glow orbs */}
-              <div className="absolute top-4 right-4 w-20 h-20 rounded-full bg-yellow-500/10 blur-xl animate-float-blob" />
-              <div className="absolute bottom-8 left-4 w-16 h-16 rounded-full bg-amber-500/10 blur-lg animate-float-blob" style={{ animationDelay: "3s" }} />
-
-              {/* Badge */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center gap-1.5 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 px-3 py-1 rounded-full">
-                  <Crown className="h-4 w-4 text-yellow-400" />
-                  <span className="text-xs font-bold text-yellow-300 uppercase tracking-wider">
-                    VIP
-                  </span>
-                </div>
-                <span className="text-xs text-yellow-500/60 font-medium">
-                  ★ TERBATAS
-                </span>
+            {/* Card inner */}
+            <div className="relative rounded-2xl overflow-hidden z-[5]"
+              style={{
+                background: "#1a1a1a",
+                border: "2px solid #d4a017",
+              }}
+            >
+              {/* Inner gold border accent */}
+              <div className="mx-4 mt-4 mb-2 rounded-xl border border-yellow-600/40 px-4 py-2 text-center">
+                <span className="font-bold text-lg" style={{ color: "#f0c040" }}>Tiket Vip</span>
               </div>
 
-              {/* Price */}
-              <div className="mb-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 to-amber-400">
-                    Rp 75.000
-                  </span>
-                </div>
-                <p className="text-yellow-500/50 text-sm mt-1">per orang</p>
-              </div>
-
-              {/* Benefits */}
-              <div className="space-y-3 mb-8">
+              <div className="p-6 pt-3 space-y-4">
                 {vipBenefits.map((b, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-yellow-400 mt-0.5 shrink-0" />
-                    <span className="text-sm text-yellow-100/80">{b}</span>
+                    <span className="text-yellow-400 font-bold mt-0.5">•</span>
+                    <span className="font-semibold text-white text-base">-{b}</span>
                   </div>
                 ))}
-              </div>
 
-              {/* CTA */}
-              <Button
-                onClick={onRegisterClick}
-                className="w-full py-6 rounded-xl text-base font-bold bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-400 hover:to-amber-500 text-black shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:shadow-[0_0_40px_rgba(255,215,0,0.5)] transition-all duration-300"
-              >
-                <Crown className="h-5 w-5 mr-2" />
-                Daftar VIP Sekarang
-              </Button>
+                <div className="pt-4">
+                  <Button
+                    onClick={onRegisterClick}
+                    className="w-full py-5 rounded-lg text-base font-bold transition-all duration-300"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #d4a017",
+                      color: "#f0c040",
+                    }}
+                  >
+                    Daftar
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* ═══════════ REGULAR CARD ═══════════ */}
-          <div className="relative group order-1 md:order-2">
-            {/* Particle canvas */}
+          {/* ═══════════ TIKET REGULER — gray border like sss1.png ═══════════ */}
+          <div className="relative group">
             <canvas
               ref={regCanvasRef}
               className="absolute inset-0 w-full h-full pointer-events-none z-10 rounded-2xl"
             />
 
-            {/* Glow border */}
-            <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-br from-slate-300 via-gray-400 to-slate-500 opacity-30 blur-sm group-hover:opacity-60 transition-opacity duration-500" />
+            {/* Gray border glow */}
+            <div className="absolute -inset-[2px] rounded-2xl"
+              style={{
+                background: "linear-gradient(135deg, #6b7280, #9ca3af, #6b7280)",
+                opacity: 0.4,
+                filter: "blur(2px)",
+              }}
+            />
 
-            {/* Card */}
-            <div className="relative rounded-2xl p-6 md:p-8 bg-gradient-to-br from-[#0d0f14] via-[#111520] to-[#0a0c12] border border-slate-500/20 overflow-hidden z-[5]">
-              {/* Shimmer overlay */}
-              <div
-                className="absolute inset-0 opacity-10 pointer-events-none animate-shimmer"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(110deg, transparent 30%, rgba(192,192,192,0.12) 50%, transparent 70%)",
-                  backgroundSize: "200% 100%",
-                }}
-              />
-
-              {/* Floating glow orbs */}
-              <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-slate-400/8 blur-xl animate-float-blob" />
-              <div className="absolute bottom-6 left-4 w-12 h-12 rounded-full bg-blue-400/6 blur-lg animate-float-blob" style={{ animationDelay: "5s" }} />
-
-              {/* Badge */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center gap-1.5 bg-slate-500/15 border border-slate-500/25 px-3 py-1 rounded-full">
-                  <Star className="h-4 w-4 text-slate-300" />
-                  <span className="text-xs font-bold text-slate-300 uppercase tracking-wider">
-                    Reguler
-                  </span>
-                </div>
+            {/* Card inner */}
+            <div className="relative rounded-2xl overflow-hidden z-[5]"
+              style={{
+                background: "#1a1a1a",
+                border: "2px solid #6b7280",
+              }}
+            >
+              {/* Inner gray border accent */}
+              <div className="mx-4 mt-4 mb-2 rounded-xl border border-gray-500/40 px-4 py-2 text-center">
+                <span className="font-bold text-lg text-gray-300">Tiket Reguler</span>
               </div>
 
-              {/* Price */}
-              <div className="mb-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-slate-200 to-gray-400">
-                    Rp 50.000
-                  </span>
-                </div>
-                <p className="text-slate-500 text-sm mt-1">per orang</p>
-              </div>
-
-              {/* Benefits */}
-              <div className="space-y-3 mb-8">
+              <div className="p-6 pt-3 space-y-4">
                 {regularBenefits.map((b, i) => (
                   <div key={i} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-slate-400 mt-0.5 shrink-0" />
-                    <span className="text-sm text-slate-300/80">{b}</span>
+                    <span className="text-gray-400 font-bold mt-0.5">•</span>
+                    <span className="font-semibold text-white text-base">-{b}</span>
                   </div>
                 ))}
-              </div>
 
-              {/* CTA */}
-              <Button
-                onClick={onRegisterClick}
-                className="w-full py-6 rounded-xl text-base font-bold bg-gradient-to-r from-slate-600 to-gray-700 hover:from-slate-500 hover:to-gray-600 text-white shadow-[0_0_20px_rgba(148,163,184,0.15)] hover:shadow-[0_0_30px_rgba(148,163,184,0.25)] transition-all duration-300"
-              >
-                <Star className="h-5 w-5 mr-2" />
-                Daftar Reguler
-              </Button>
+                <div className="pt-4">
+                  <Button
+                    onClick={onRegisterClick}
+                    className="w-full py-5 rounded-lg text-base font-bold transition-all duration-300"
+                    style={{
+                      background: "transparent",
+                      border: "2px solid #6b7280",
+                      color: "#d1d5db",
+                    }}
+                  >
+                    Daftar
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { WEBINAR_CONFIG } from "@/config/webinar";
-import { CheckCircle2, MessageCircle } from "lucide-react";
+import { CheckCircle2, MessageCircle, CalendarDays, Clock, Ticket } from "lucide-react";
 
 interface SuccessPageProps {
   ticketType?: "vip" | "regular";
@@ -30,40 +30,50 @@ const SuccessPage = ({ ticketType = "regular" }: SuccessPageProps) => {
   }, [whatsappLink]);
 
   return (
-    <section className="min-h-screen flex items-center justify-center py-16">
-      <div className="container max-w-lg text-center animate-scale-in">
-        <div className="liquid-glass-card rounded-2xl shadow-elevated p-8 md:p-12 space-y-6">
-          <div className="mx-auto w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <CheckCircle2 className="h-10 w-10 text-primary" />
+    <section className="min-h-screen flex items-center justify-center py-16 bg-white">
+      <div className="container max-w-md text-center">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-elevated p-8 md:p-10 space-y-6">
+          <div className="mx-auto w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center">
+            <CheckCircle2 className="h-8 w-8 text-emerald-500" />
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
-            Pendaftaran Berhasil! 🎉
-          </h1>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+              Pendaftaran Berhasil! 🎉
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              Terima kasih telah mendaftar <strong className="text-foreground">{WEBINAR_CONFIG.title}</strong>
+            </p>
+          </div>
 
-          <p className="text-muted-foreground">
-            Terima kasih telah mendaftar <strong className="text-foreground">{WEBINAR_CONFIG.title}</strong>. 
-            Bukti pembayaran Anda sedang kami verifikasi.
-          </p>
-
-          <div className="rounded-xl bg-secondary p-4 text-sm text-secondary-foreground">
-            <p>📅 {WEBINAR_CONFIG.date}</p>
-            <p>🕐 {WEBINAR_CONFIG.time}</p>
-            <p>🎫 Paket: {ticketType === "vip" ? "VIP" : "Reguler"}</p>
+          <div className="rounded-xl bg-gray-50 border border-gray-100 p-4 text-sm text-foreground space-y-2">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-4 w-4 text-muted-foreground" />
+              <span>{WEBINAR_CONFIG.date}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-muted-foreground" />
+              <span>{WEBINAR_CONFIG.time}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Ticket className="h-4 w-4 text-muted-foreground" />
+              <span>Paket {ticketType === "vip" ? "VIP" : "Reguler"}</span>
+            </div>
           </div>
 
           <div className="space-y-3">
             <p className="text-sm text-muted-foreground">
-              Anda akan dialihkan ke grup WhatsApp {ticketType === "vip" ? "VIP" : "Reguler"} dalam <strong className="text-primary">{countdown} detik</strong>...
+              Anda akan dialihkan ke grup WhatsApp dalam{" "}
+              <strong className="text-primary">{countdown} detik</strong>
             </p>
             <Button
               variant="cta"
               size="lg"
-              className="w-full rounded-xl py-6 text-base gap-2"
+              className="w-full rounded-xl py-5 text-sm gap-2"
               onClick={() => window.open(whatsappLink, "_blank")}
             >
-              <MessageCircle className="h-5 w-5" />
-              Gabung Grup WhatsApp Sekarang
+              <MessageCircle className="h-4 w-4" />
+              Gabung Grup WhatsApp
             </Button>
           </div>
         </div>

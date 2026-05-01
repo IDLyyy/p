@@ -48,7 +48,6 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
       if (error) throw error;
       if (!data?.token) throw new Error("Token Midtrans tidak diterima");
 
-      // Inject snap.js with client key once
       if (!snapReady) {
         await new Promise<void>((resolve, reject) => {
           const existing = document.querySelector(`script[src="${SNAP_SCRIPT_URL}"]`);
@@ -71,7 +70,6 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
 
       const orderId: string = data.order_id;
 
-      // Helper: cek apakah transaksi benar-benar sudah dibayar
       const isPaid = (result: unknown): boolean => {
         const r = result as Record<string, string> | null;
         const status = r?.transaction_status;
@@ -85,7 +83,6 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
             toast.success("Pembayaran berhasil!");
             onSuccess(orderId, "PAID");
           } else {
-            // Midtrans memanggil onSuccess tapi belum benar-benar dibayar
             await saveSheet(orderId, "PENDING");
             toast("Pembayaran menunggu konfirmasi. Silakan selesaikan pembayaran.");
             setLoading(false);
@@ -127,39 +124,38 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
     }
   };
 
-  // Pre-load snap on mount for snappier UX
   useEffect(() => {
     return () => setLoading(false);
   }, []);
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="container max-w-2xl">
-        <div className="liquid-glass-card rounded-2xl shadow-elevated p-6 md:p-10 animate-scale-in">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground text-center mb-2">
-            Pembayaran
-          </h2>
-          <p className="text-muted-foreground text-center mb-8">
-            Total: <span className="font-bold text-primary">{priceLabel}</span>
-          </p>
+    <section className="py-16 md:py-24 bg-white min-h-screen flex items-center">
+      <div className="container max-w-xl">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-elevated p-6 md:p-10">
+          <div className="text-center mb-6">
+            <p className="text-sm font-semibold text-primary uppercase tracking-widest mb-2">Pembayaran</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+              Ringkasan Pesanan
+            </h2>
+          </div>
 
-          {/* Ticket type badge */}
+          {/* Ticket badge */}
           <div className="flex justify-center mb-6">
             {isVip ? (
-              <div className="flex items-center gap-2 bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 px-4 py-2 rounded-full">
-                <Crown className="h-4 w-4 text-yellow-400" />
-                <span className="text-sm font-bold text-yellow-600">Paket VIP</span>
+              <div className="inline-flex items-center gap-2 bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-full">
+                <Crown className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm font-semibold text-yellow-700">Paket VIP</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2 bg-slate-100 border border-slate-300 px-4 py-2 rounded-full">
+              <div className="inline-flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-full">
                 <Star className="h-4 w-4 text-slate-500" />
-                <span className="text-sm font-bold text-slate-600">Paket Reguler</span>
+                <span className="text-sm font-semibold text-slate-600">Paket Reguler</span>
               </div>
             )}
           </div>
 
           {/* Order summary */}
-          <div className="rounded-xl bg-secondary p-4 md:p-6 mb-6 space-y-2 text-sm">
+          <div className="rounded-xl bg-gray-50 border border-gray-100 p-5 mb-6 space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Nama</span>
               <span className="font-medium text-foreground">{registrationData.fullName}</span>
@@ -182,22 +178,22 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
                 <span className="font-medium text-foreground">{registrationData.referralCode}</span>
               </div>
             )}
-            <div className="border-t border-border pt-2 mt-2 flex justify-between">
+            <div className="border-t border-gray-200 pt-3 mt-3 flex justify-between">
               <span className="font-semibold text-foreground">Total</span>
-              <span className="font-bold text-primary">{priceLabel}</span>
+              <span className="font-bold text-primary text-base">{priceLabel}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground justify-center mb-6">
             <ShieldCheck className="h-4 w-4 text-primary" />
-            Pembayaran aman melalui Midtrans (VA, QRIS, e-wallet, kartu)
+            Pembayaran aman melalui Midtrans
           </div>
 
           <div className="flex gap-3">
             <Button
               variant="outline"
               size="lg"
-              className="flex-1 rounded-xl py-6"
+              className="flex-1 rounded-xl py-5"
               onClick={onBack}
               disabled={loading}
             >
@@ -206,7 +202,7 @@ const PaymentSection = ({ registrationData, onSuccess, onBack }: PaymentSectionP
             <Button
               variant="cta"
               size="lg"
-              className="flex-1 rounded-xl py-6"
+              className="flex-1 rounded-xl py-5"
               onClick={handlePay}
               disabled={loading}
             >
