@@ -254,7 +254,7 @@ const PricingSection = ({ onRegisterClick }: PricingSectionProps) => {
 
                 <div className="pt-4">
                   <Button
-                    onClick={onRegisterClick}
+                    onClick={() => window.open("https://lynk.id/marhalahdreamachievers/pn62oxoq63k1/checkout?token=cGFyYW1zPSU1QiU1RCZiaWRfcHJpY2U9MCZxdHlfcHJvZD0xJnNlc3NpZD0mdG90YWxfcHJpY2U9JnRvdGFsX3VuaXQ9", "_blank")}
                     className="w-full py-5 rounded-lg text-base font-bold transition-all duration-300"
                     style={{
                       background: "transparent",
@@ -307,7 +307,7 @@ const PricingSection = ({ onRegisterClick }: PricingSectionProps) => {
 
                 <div className="pt-4">
                   <Button
-                    onClick={onRegisterClick}
+                    onClick={() => window.open("https://lynk.id/marhalahdreamachievers/8kl09odg55l0/checkout?token=cGFyYW1zPSU1QiU1RCZiaWRfcHJpY2U9MCZxdHlfcHJvZD0xJnNlc3NpZD0mdG90YWxfcHJpY2U9JnRvdGFsX3VuaXQ9", "_blank")}
                     className="w-full py-5 rounded-lg text-base font-bold transition-all duration-300"
                     style={{
                       background: "transparent",
