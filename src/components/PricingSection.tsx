@@ -241,7 +241,7 @@ const PricingSection = ({ onRegisterClick }: PricingSectionProps) => {
             >
               {/* Inner gold border accent */}
               <div className="mx-4 mt-4 mb-2 rounded-xl border border-yellow-600/40 px-4 py-2 text-center">
-                <span className="font-bold text-lg" style={{ color: "#f0c040" }}>Tiket Vip</span>
+                <span className="font-bold text-lg" style={{ color: "#f0c040" }}>Tiket Prioritas</span>
               </div>
 
               <div className="p-6 pt-3 space-y-4">
