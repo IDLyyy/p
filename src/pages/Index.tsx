@@ -3,7 +3,6 @@ import HeroSection from "@/components/HeroSection";
 import RegistrationForm, { type RegistrationData } from "@/components/RegistrationForm";
 import PaymentSection from "@/components/PaymentSection";
 import SuccessPage from "@/components/SuccessPage";
-import ScrollRegisterPopup from "@/components/ScrollRegisterPopup";
 import { addParticipant } from "@/lib/participants";
 
 type Step = "hero" | "register" | "payment" | "success";
@@ -44,7 +43,6 @@ const Index = () => {
               <RegistrationForm onSubmit={handleRegistration} />
             </div>
           )}
-          <ScrollRegisterPopup onRegisterClick={scrollToForm} />
         </>
       )}
       {step === "payment" && registrationData && (
